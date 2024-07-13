@@ -1,0 +1,42 @@
+﻿@inherits LayoutComponentBase
+<RadzenLayout>
+    <RadzenHeader>
+        <RadzenStack Orientation="Radzen.Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
+            <RadzenSidebarToggle Click="@(() => sidebar1Expanded = !sidebar1Expanded)" />
+            <SectionOutlet SectionName="Header" />
+        </RadzenStack>
+    </RadzenHeader>
+    <RadzenSidebar @bind-Expanded="@sidebar1Expanded" Responsive="@responsive">
+        <RadzenPanelMenu>
+            <RadzenPanelMenuItem Text="Projekte" Icon="collections_bookmark" Path="/" />
+            <RadzenPanelMenuItem Text="Opl" Icon="checklist" Path="/opl" />
+            <RadzenPanelMenuItem Text="Einstellungen" Icon="settings" Path="/settings" />
+            
+        </RadzenPanelMenu>
+        <div class="rz-p-4">
+        </div>
+    </RadzenSidebar>
+    <RadzenBody Expanded="true">
+        <div class="rz-p-4">
+            @Body
+        </div>
+    </RadzenBody>
+    <RadzenFooter>
+        Footer
+    </RadzenFooter>
+</RadzenLayout>
+
+@code {
+    bool sidebar1Expanded = false;
+    bool responsive = false;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            responsive = true;
+        }
+        base.OnAfterRender(firstRender);
+    }
+
+}

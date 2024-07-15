@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components.WebView.Wpf;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
+using Opl.Wpf;
 using Radzen;
 using System.Net.Http;
 using System.Text;
@@ -25,15 +26,9 @@ namespace Opl.Metro
         public MainWindow()
         {
             InitializeComponent();
-            var serviceCollection = new ServiceCollection();
-            serviceCollection.AddWpfBlazorWebView();
 
-            serviceCollection.AddRadzenComponents();
-            serviceCollection.AddTransient<HttpClient>();
-            serviceCollection.AddMemoryCache();
-
-
-            Resources.Add("services", serviceCollection.BuildServiceProvider());
+            var services = new Services();
+            Resources.Add("services", services.BuildServiceProvider());
 
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
         }
@@ -48,7 +43,7 @@ namespace Opl.Metro
         private async void ButtonOpenDevTools_Click(object sender, RoutedEventArgs e)
         {
             await blazorWebView.WebView.EnsureCoreWebView2Async();
-            blazorWebView.WebView.CoreWebView2.OpenDevToolsWindow(); 
+            blazorWebView.WebView.CoreWebView2.OpenDevToolsWindow();
         }
     }
 }

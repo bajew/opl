@@ -1,0 +1,37 @@
+﻿@using Opl.Shared
+
+<RadzenStack>
+    <RadzenFormField Text="Name">
+        <RadzenTextBox @bind-Value="@Project.Name" />
+    </RadzenFormField>
+    <RadzenFormField Text="Beschreibung">
+        <RadzenTextBox @bind-Value="@Project.Description" />
+    </RadzenFormField>
+    <RadzenRow>
+        <RadzenColumn Size="6">
+            <RadzenButton Text="Abbrechen" ButtonStyle="ButtonStyle.Secondary" Click="Abort"></RadzenButton>
+        </RadzenColumn>
+        <RadzenColumn Size="6">
+            <RadzenButton Text="OK" ButtonStyle="ButtonStyle.Primary" Click="Ok"></RadzenButton>
+        </RadzenColumn>
+    </RadzenRow>
+</RadzenStack>
+
+@code {
+    [Inject]
+    public DialogService DialogService { get; set; } = default!;
+
+    [Parameter]
+    public Project Project { get; set; } = new();
+
+    public async Task Abort()
+    {
+        DialogService.Close(null);
+        await Task.CompletedTask;
+    }
+    public async Task Ok()
+    {
+        DialogService.Close(Project);
+        await Task.CompletedTask;
+    }
+}

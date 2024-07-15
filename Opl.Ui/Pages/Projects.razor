@@ -1,0 +1,71 @@
+﻿@page "/"
+@page "/projects"
+<SectionContent SectionName="Header">
+    Projekte
+</SectionContent>
+<SectionContent SectionName="Controls">
+    <RadzenButton Click="AddProject" Icon="add" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.ExtraSmall" class="rz-border-radius-10 rz-shadow-4" />
+</SectionContent>
+<RadzenStack>
+    @foreach (var project in ProjectList)
+    {
+        <ProjectCard Project="@project"></ProjectCard>
+    }
+</RadzenStack>
+@code {
+    [Inject]
+    private IProjectsRepository ProjectsRepository { get; set; } = default!;
+
+    [Inject]
+    private DialogService DialogService { get; set; } = default!;
+
+    [Inject]
+    private NotificationService NotificationService { get; set; } = default!;
+
+    private IEnumerable<Project> ProjectList { get; set; } = Enumerable.Empty<Project>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        try
+        {
+            ProjectList = await Task.Run(() => ProjectsRepository.GetProjects());
+        }
+        catch (Exception ex)
+        {
+            NotificationService.Notify(NotificationSeverity.Error, ex.Message, ex.ToString(), 10000);
+        }
+    }
+
+    public async Task AddProject()
+    {
+        try
+        {
+            var newProject = await DialogService.OpenAsync<ProjectEdit>("Neues Project erstellen",
+            new Dictionary<string, object>()
+            {
+            },
+            new DialogOptions()
+                {
+                    Resizable = true,
+
+                });
+            if (newProject is Project)
+            {
+
+                await Task.Run(() => ProjectsRepository.InsertProject(newProject));
+                await LoadAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            NotificationService.Notify(NotificationSeverity.Error, ex.Message, ex.ToString(), 10000);
+        }
+
+    }
+}

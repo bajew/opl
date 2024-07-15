@@ -1,0 +1,17 @@
+﻿@using Opl.Shared
+<RadzenCard>
+    @if (Project is not null)
+    {
+        <RadzenLabel>@Project.Name</RadzenLabel>
+        
+    }
+    else
+    {
+        <RadzenLabel Style="color:var(--rz-warning)">Keine Daten</RadzenLabel>
+    }
+</RadzenCard>
+
+@code {
+    [Parameter]
+    public Project Project { get; set; }
+}
